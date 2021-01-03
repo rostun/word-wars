@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>War of the Word!</title>
+    <title>War of the Words!</title>
     <style>
         body {
             position: fixed;
@@ -10,15 +10,37 @@
             top: 50%;
             transform: translate(-50%, -50%);
         }
-    	canvas { background: #eee; display: block; margin: 0 auto; }
+    	canvas { 
+            background: #eee; 
+            border: thin dashed red;
+        }
     </style>
 </head>
 <body>
 
-<canvas id="myCanvas" width="480" height="320"></canvas>
+<canvas id="myCanvas" width="480" height="320">
+
+</canvas>
 
 <script>
+    var ctx = document.getElementById('myCanvas').getContext('2d');
 
+    // hexagon
+    var numberOfSides = 6,
+        size = 20,
+        Xcenter = 25,
+        Ycenter = 25;
+
+    ctx.beginPath();
+    ctx.moveTo (Xcenter +  size * Math.cos(0), Ycenter +  size *  Math.sin(0));          
+
+    for (var i = 1; i <= numberOfSides;i += 1) {
+    ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides));
+    }
+
+    ctx.strokeStyle = "#000000";
+    ctx.lineWidth = 1;
+    ctx.stroke();
 </script>
 
 </body>
