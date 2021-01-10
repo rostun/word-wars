@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <title>War of the Words!</title>
@@ -10,56 +11,83 @@
             top: 50%;
             transform: translate(-50%, -50%);
         }
-    	canvas { 
+
+        canvas {
+            background-color: black;
             /*sbackground: #eee; 
             border: thin dashed red;*/
         }
     </style>
 </head>
+
 <body>
 
-<canvas id="myCanvas" width="480" height="320">
+    <canvas id="myCanvas" width="480" height="320">
 
-</canvas>
+    </canvas>
 
-<script>
-    function main() {
-        const canvas = document.getElementById('myCanvas');
-        const gl = canvas.getContext('webgl');
-        
-        if (gl === null) {
-            alert("Unable to initialize WebGL. Your browser or machine may not support it.");
-            return;
+    <script>
+        function main() {
+            var canvas = document.getElementById('myCanvas');
+            var gl = canvas.getContext('webgl');
+
+            //geometry
+            var vertices = [ 
+                0.5, 0.5, 
+                0.1,-0.5, 
+                0.5,-0.5
+            ] 
+
+            //create VBO
+            var vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            //create shader
+            var vertShader = gl.createShader(gl.VERTEX_SHADER);
+            var vertSrc = 'attribute vec2 coordinates;' +
+                'void main(){' +
+                'gl_Position = vec4(coordinates,0.0,1.0);' +
+                '}';
+            gl.shaderSource(vertShader, vertSrc);
+            gl.compileShader(vertShader);
+            if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
+                console.error('ERROR compiling vertex shader!', gl.getShaderInfoLog(vertShader));
+                return;
+            }
+
+            var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
+            var fragSrc = 'void main(){' +
+                'gl_FragColor = vec4(0.0,0.7,0.9,1.0);' +
+                '}';
+            gl.shaderSource(fragShader, fragSrc);
+            gl.compileShader(fragShader);
+            if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
+                console.error('ERROR compiling fragment shader!', gl.getShaderInfoLog(fragShader));
+                return;
+            }
+
+            var program = gl.createProgram();
+            gl.attachShader(program, vertShader);
+            gl.attachShader(program, fragShader);
+
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            //association
+            var coord = gl.getAttribLocation(program, 'coordinates');
+            gl.vertexAttribPointer(coord, 2, gl.FLOAT, false, 2 * Float32Array.BYTES_PER_ELEMENT, 0);
+            gl.enableVertexAttribArray(coord);
+
+            //draw
+            gl.clearColor(0.9, 0.2, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.drawArrays(gl.TRIANGLES, 0, vertices.length / 2);
         }
 
-        // Set clear color to black, fully opaque
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        // Clear the color buffer with specified clear color
-        gl.clear(gl.COLOR_BUFFER_BIT);
-    }
-    
-    window.onload = main;
-
-    /*var ctx = document.getElementById('myCanvas').getContext('2d');
-
-    // hexagon
-    var numberOfSides = 6,
-        size = 20,
-        Xcenter = 25,
-        Ycenter = 25;
-
-    ctx.beginPath();
-    ctx.moveTo (Xcenter +  size * Math.cos(0), Ycenter +  size *  Math.sin(0));          
-
-    for (var i = 1; i <= numberOfSides;i += 1) {
-    ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides));
-    }
-
-    ctx.strokeStyle = "#000000";
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    */
-</script>
+        window.onload = main;
+    </script>
 
 </body>
+
 </html>
