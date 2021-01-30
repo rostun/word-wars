@@ -14,11 +14,10 @@ class Board {
         // hexagon
         let Xcenter = 25, Ycenter = 25;
         
-        this.drawHexPiece(Xcenter, Ycenter, RADIANS_30);
-        
         for (let i = 0; i < HEX_PIECES; i++) {
-            Xcenter += i * 10;
-            Ycenter += i * 10;    
+            this.drawHexPiece(Xcenter, Ycenter, RADIANS_30);
+
+            Xcenter += 40;  
         }
     
     }
