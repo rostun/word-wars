@@ -1,6 +1,7 @@
 const HEX_SIDES = 6;
 const HEX_SIZE = 20;
 const HEX_PIECES = 5;
+const HEX_ROWS = 10;
 const ANGLE_30 = 30 * (180 / Math.PI);
 const RADIANS_30 = 30 * (Math.PI / 180);
 
@@ -12,14 +13,23 @@ class Board {
     
     initialize() {
         // hexagon
-        let Xcenter = 25, Ycenter = 25;
-        
-        for (let i = 0; i < HEX_PIECES; i++) {
-            this.drawHexPiece(Xcenter, Ycenter, RADIANS_30);
-
-            Xcenter += 40;  
-        }
+        let info = { Xcenter: 25, Ycenter: 25 };
     
+        for (let i = 0; i < HEX_ROWS; i++) {
+            this.drawRow(info);
+            
+            if(i%2 === 0) info.Xcenter = 59;
+            else info.Xcenter = 25;
+            
+            info.Ycenter += 20;
+        }
+    }
+
+    drawRow({ Xcenter, Ycenter }) {
+        for (let i = 0; i < HEX_PIECES; i++) {
+            this.drawHexPiece(Xcenter, Ycenter);
+            Xcenter += 67;
+        } 
     }
 
     polygon(X, Y) { 
@@ -42,6 +52,7 @@ class Board {
         this.Context.stroke();
     }
     
+    //this.drawHexPiece(Xcenter, Ycenter, RADIANS_30);
     drawHexPiece(X, Y, radians) {
         const _rotateBy = radians || 0;
     
