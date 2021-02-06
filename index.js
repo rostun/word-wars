@@ -1,5 +1,6 @@
 class Board {
-    constructor(Context) {
+    constructor(Canvas, Context) {
+        this.Canvas = Canvas;
         this.Context = Context;
 
         this.HEX_SIDES = 6;
@@ -41,6 +42,8 @@ class Board {
     }
 
     initialize() {
+        this.Canvas.onmousedown = this.getMousePosition;
+        
         let Xcenter = this.START_X;
         let Ycenter = this.START_Y;
         for (let i = 0; i < this.ROW_MAP.length; i++) {
@@ -82,11 +85,17 @@ class Board {
         this.Context.lineWidth = 1;
         this.Context.stroke();
     }
+
+    getMousePosition(event) {
+        console.log(event.offsetX);
+        console.log(event.offsetY);
+    }
 }
 
 window.onload = () => {
-    const ctx = document.getElementById('board').getContext('2d');
-    const GameBoard = new Board(ctx);
+    const cvs = document.getElementById('board');
+    const ctx = cvs.getContext('2d');
+    const GameBoard = new Board(cvs, ctx);
     GameBoard.initialize();
 };
 
