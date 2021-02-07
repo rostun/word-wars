@@ -81,6 +81,7 @@ class Board {
             );
         }
 
+        this.Context.fillText('A', X, Y, size);
         this.Context.strokeStyle = "#000000";
         this.Context.lineWidth = 1;
         this.Context.stroke();
